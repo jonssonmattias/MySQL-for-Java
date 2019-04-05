@@ -68,6 +68,13 @@ public class MySQL implements SQLinterface{
 		}catch(SQLException e){ System.out.println(e);}
 	}
 
+	public String select(String tableName) {
+		return select(tableName, new String[] {"*"}, "1");
+	}
+
+	public String select(String tableName, String[] columns) {
+		return select(tableName, columns, "1");
+	}
 	public String select(String tableName, String[] columns, String condition) {
 		String query = "SELECT ";
 		for(int i=0;i<columns.length-1;i++)
@@ -76,7 +83,7 @@ public class MySQL implements SQLinterface{
 		return runQuery(query);
 	}
 
-	public String selectOrderBy(String tableName, String[] columns, String condition, String[] orderColumns, String[] order) {
+	public String select(String tableName, String[] columns, String condition, String[] orderColumns, int[] order) {
 		String query = "SELECT ";
 		for(int i=0;i<columns.length-1;i++)
 			query+=columns[i]+", ";
@@ -111,26 +118,53 @@ public class MySQL implements SQLinterface{
 		runQuery(query); 
 	}
 
-	public String join(String type, String tableName1, String tableName2, String[] columns, String condition) {
+	public String join(int type, String tableName1, String tableName2, String[] columnsTable1, String[] columnsTable2, String condition) {
+		String joinType=getType(type);
+		
 		String query="SELECT ";
-		for(int i=0;i<columns.length-1;i++)
-			query+=columns[i]+", ";
-		query+=columns[columns.length-1]+" FROM "+tableName1+" "+type+" "+tableName2+" ON "+condition;
+		for(int i=0;i<columnsTable1.length;i++){
+			query+=tableName1+"."+columnsTable1[i]+", ";
+		};
+		for(int i=0;i<columnsTable2.length-1;i++){
+			query+=tableName2+"."+columnsTable2[i]+", ";
+		}
+		query+=tableName2+"."+columnsTable2[columnsTable2.length-1];
+		query+=" FROM "+tableName1+" "+joinType+" JOIN "+tableName2+" ON "+condition;
 		return runQuery(query);
 	}
 
-	public String joinOrderBy(String type, String tableName1, String tableName2, String[] columns, String condition, String[] orderColumns, String[] order) {
+	public String join(int type, String tableName1, String tableName2, String[] columnsTable1, String[] columnsTable2, String condition, String[] orderColumns, int[] order) {
+		String joinType=getType(type);
+		String[] orderType=getOrder(order);
+		
 		String query="SELECT ";
-		for(int i=0;i<columns.length-1;i++)
-			query+=columns[i]+", ";
-		query+=columns[columns.length-1]+" FROM "+tableName1+" "+type+" "+tableName2+" ON "+condition+" ORDER BY ";
-		for(int i=0;i<orderColumns.length-1&&i<order.length-1;i++)
-			query += "`"+orderColumns[i]+"` "+order[i]+", ";
-		query += "`"+orderColumns[orderColumns.length-1]+"` "+order[order.length-1]+";";
+		for(int i=0;i<columnsTable1.length;i++){
+			query+=tableName1+"."+columnsTable1[i]+", ";
+		};
+		for(int i=0;i<columnsTable2.length-1;i++){
+			query+=tableName2+"."+columnsTable2[i]+", ";
+		}
+		query+=tableName2+"."+columnsTable2[columnsTable2.length-1];
+		query+=" FROM "+tableName1+" "+joinType+" JOIN "+tableName2+" ON "+condition;
+		query+=" ORDER BY ";
+		for(int i=0;i<orderColumns.length-1&&i<orderType.length-1;i++)
+			query += "`"+orderColumns[i]+"` "+orderType[i]+", ";
+		query += "`"+orderColumns[orderColumns.length-1]+"` "+orderType[orderType.length-1]+";";
 		return runQuery(query);
 	} 
 
-	private String runQuery(String query) {
+	private String[] getOrder(int[] order) {
+		String[] orderType = new String[order.length];
+		for(int i=0;i<order.length;i++) {
+			switch(order[i]) {
+			case 1: orderType[i]="ASC";
+			case 2: orderType[i]="DESC";
+			}
+		}
+		return orderType;
+	}
+
+	public String runQuery(String query) {
 		String s="";
 		try {
 			stmt.execute(query);
@@ -145,7 +179,18 @@ public class MySQL implements SQLinterface{
 		} catch (SQLException e) {
 			System.out.println(e);
 		}
+		System.out.println(query);
 		return s;
+	}
+	
+	private String getType(int type) {
+		switch(type) {
+		case 1: return "INNER";
+		case 2: return "OUTER";
+		case 3: return "LEFT";
+		case 4: return "RIGHT";
+		}
+		return "";
 	}
 
 	private String printColumns(ResultSetMetaData metaData, int numberOfColumns) {
@@ -168,9 +213,10 @@ public class MySQL implements SQLinterface{
 	public static void main(String args[]){  
 		MySQL db = new MySQL("java_test","root","mffmff11","127.0.0.1","3306");
 		String tableName = "test";
-		String[] columns = {"table1.name", "table2.age"};
+		String[] columns1 = {"age"};
+		String[] columns2 = {"name"};
 		String[] values = {"Mattias", "19"};
-		String[] order = {"ASC","DESC"};
+		int[] order = {1,2};
 		String[] orderColumns = {"name","age"};
 
 		//		String[] col = {"Id INT NOT NULL AUTO_INCREMENT PRIMARY KEY","name VARCHAR(250) NOT NULL","email VARCHAR(250) NOT NULL"};
@@ -179,7 +225,7 @@ public class MySQL implements SQLinterface{
 		//		db.createTable("table2",columns);
 
 		//		db.dropTable("test2");
-
+		
 		//		db.insert("table1", columns, values);
 		//		db.insert("table2", columns, values);
 				
@@ -195,8 +241,9 @@ public class MySQL implements SQLinterface{
 
 		//		db.selectLimit(tableName, orderColumns, "1", "3");
 
-		//		System.out.println(db.join("INNER JOIN", "table1", "table2", columns, "table1.age=table2.age"));
+		System.out.println(db.join(1, "table1", "table2", columns1, columns2, "table1.age=table2.age", orderColumns, order));
 
 		//		db.joinOrderBy("INNER JOIN", "table1", "table2", columns, "table1.age=table2.age", orderColumns, order);
+		
 	}
 }
