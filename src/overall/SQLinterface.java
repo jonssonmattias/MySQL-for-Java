@@ -1,5 +1,4 @@
-package database;
-
+package overall;
 public interface SQLinterface {
 	public void connect(String database, String username, String password);
 	public void disconnect();

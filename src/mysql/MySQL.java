@@ -1,5 +1,6 @@
-package database;
+package mysql;
 import java.sql.*;
+import overall.SQLinterface;
 
 public class MySQL implements SQLinterface{
 	private Connection con = null;
