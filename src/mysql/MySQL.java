@@ -109,8 +109,7 @@ public class MySQL implements SQLinterface{
 			query += "`"+columns[i]+"` = '"+values[i]+"', ";
 		}
 		query += "`"+columns[columns.length-1]+"` = '"+values[values.length-1]+"' "+"WHERE "+condition+";";
-		runQuery(query);
-		//			stmt.execute(query);  
+		runQuery(query); 
 	}
 
 	public void delete(String tableName, String condition) {
