@@ -168,14 +168,6 @@ public class MySQL implements SQLinterface{
 		String s="";
 		try {
 			stmt.execute(query);
-			ResultSet resultSet=stmt.executeQuery(query);  
-			ResultSetMetaData metaData = resultSet.getMetaData();
-			int numberOfColumns = metaData.getColumnCount();
-			while(resultSet.next()) {
-				for(int i=0;i<numberOfColumns;i++) 
-					s+=resultSet.getString(i+1)+"\t\t";
-				s+="\n";
-			}
 		} catch (SQLException e) {
 			System.out.println(e);
 		}
@@ -208,42 +200,5 @@ public class MySQL implements SQLinterface{
 			return stmt.executeQuery(sql).next();
 		} catch (SQLException e) {System.out.println(e);}
 		return false;
-	}
-
-	public static void main(String args[]){  
-		MySQL db = new MySQL("java_test","root","mffmff11","127.0.0.1","3306");
-		String tableName = "test";
-		String[] columns1 = {"age"};
-		String[] columns2 = {"name"};
-		String[] values = {"Mattias", "19"};
-		int[] order = {1,2};
-		String[] orderColumns = {"name","age"};
-
-		//		String[] col = {"Id INT NOT NULL AUTO_INCREMENT PRIMARY KEY","name VARCHAR(250) NOT NULL","email VARCHAR(250) NOT NULL"};
-
-		//		db.createTable("table1",columns);
-		//		db.createTable("table2",columns);
-
-		//		db.dropTable("test2");
-		
-		//		db.insert("table1", columns, values);
-		//		db.insert("table2", columns, values);
-				
-		//		System.out.println(db.select(tableName, new String[]{"*"},"1"));
-
-		//		db.update(tableName, columns, values, "`Id` = 1");
-
-		//		db.delete(tableName, "`Id` = 2");
-
-		//		db.selectOrderBy(tableName, columns, "1", orderColumns, order );
-
-		//		db.selectSpecificOrderBy(tableName, columns, "1", orderColumns, order);
-
-		//		db.selectLimit(tableName, orderColumns, "1", "3");
-
-		System.out.println(db.join(1, "table1", "table2", columns1, columns2, "table1.age=table2.age", orderColumns, order));
-
-		//		db.joinOrderBy("INNER JOIN", "table1", "table2", columns, "table1.age=table2.age", orderColumns, order);
-		
 	}
 }
