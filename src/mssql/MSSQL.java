@@ -23,8 +23,6 @@ public class MSSQL implements SQLinterface {
 		connect(database,user,password);
 	}
 
-
-
 	public void connect(String database, String user, String password) {
 		String connectionString = String.format("jdbc:sqlserver://%s:%s;database=%s;user=%s;password=%s;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;", 
 				hostname,port,database, user, password);
