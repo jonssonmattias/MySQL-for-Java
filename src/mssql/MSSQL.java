@@ -38,8 +38,7 @@ public class MSSQL implements SQLinterface {
 
 	public void disconnect() {
 		try {stmt.close();
-		}catch(Exception e){ System.out.println(e);}
-		System.out.println("Disconnected");
+		}catch(Exception e){ e.printStackTrace();}
 	}
 
 	public void createDatabase(String databaseName) {
@@ -197,7 +196,7 @@ public class MSSQL implements SQLinterface {
 		try {
 			String sql = "SELECT name FROM master.dbo.sysdatabases WHERE name = "+databaseName; 
 			return stmt.executeQuery(sql).next();
-		} catch (SQLException e) {System.out.println(e);}
+		} catch (SQLException e) {e.printStackTrace();}
 		return false;
 	}
 }
