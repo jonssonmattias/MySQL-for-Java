@@ -18,7 +18,9 @@ public class MSSQL implements SQLinterface {
 			con = DriverManager.getConnection(connectionString);
 			stmt = con.createStatement();
 		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println(" 1");
 			e.printStackTrace();
+			return;
 		}
 		connect(database,user,password);
 	}
@@ -30,7 +32,9 @@ public class MSSQL implements SQLinterface {
 			con = DriverManager.getConnection(connectionString);
 			stmt = con.createStatement();
 		} catch (SQLException e) {
+			System.out.println(" 2");
 			e.printStackTrace();
+			return;
 		}
 	}
 
@@ -68,11 +72,11 @@ public class MSSQL implements SQLinterface {
 	}
 
 	public String select(String tableName) {
-		return select(tableName, new String[] {"*"}, "1");
+		return select(tableName, new String[] {"*"}, "1=1");
 	}
 
 	public String select(String tableName, String[] columns) {
-		return select(tableName, columns, "1");
+		return select(tableName, columns, "1=1");
 	}
 
 	public String select(String tableName, String[] columns, String condition) {
@@ -178,6 +182,14 @@ public class MSSQL implements SQLinterface {
 		String s="";
 		try {
 			stmt.execute(query);
+			ResultSet resultSet=stmt.executeQuery(query);  
+			ResultSetMetaData metaData = resultSet.getMetaData();
+			int numberOfColumns = metaData.getColumnCount();
+			while(resultSet.next()) {
+				for(int i=0;i<numberOfColumns;i++) 
+					s+=resultSet.getString(i+1)+"\t\t";
+				s+="\n";
+			}
 		} catch (SQLException e) {
 			System.out.println(e+" 1");
 		}
