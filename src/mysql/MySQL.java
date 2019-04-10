@@ -109,7 +109,8 @@ public class MySQL implements SQLinterface{
 			query += "`"+columns[i]+"` = '"+values[i]+"', ";
 		}
 		query += "`"+columns[columns.length-1]+"` = '"+values[values.length-1]+"' "+"WHERE "+condition+";";
-		runQuery(query); 
+		runQuery(query);
+		//			stmt.execute(query);  
 	}
 
 	public void delete(String tableName, String condition) {
@@ -167,6 +168,14 @@ public class MySQL implements SQLinterface{
 		String s="";
 		try {
 			stmt.execute(query);
+			ResultSet resultSet=stmt.executeQuery(query);  
+			ResultSetMetaData metaData = resultSet.getMetaData();
+			int numberOfColumns = metaData.getColumnCount();
+			while(resultSet.next()) {
+				for(int i=0;i<numberOfColumns;i++) 
+					s+=resultSet.getString(i+1)+"\t\t";
+				s+="\n";
+			}
 		} catch (SQLException e) {
 			System.out.println(e);
 		}
