@@ -18,7 +18,6 @@ public class MSSQL implements SQLinterface {
 			con = DriverManager.getConnection(connectionString);
 			stmt = con.createStatement();
 		} catch (SQLException | ClassNotFoundException e) {
-			System.out.println(" 1");
 			e.printStackTrace();
 			return;
 		}
@@ -32,7 +31,6 @@ public class MSSQL implements SQLinterface {
 			con = DriverManager.getConnection(connectionString);
 			stmt = con.createStatement();
 		} catch (SQLException e) {
-			System.out.println(" 2");
 			e.printStackTrace();
 			return;
 		}
@@ -191,7 +189,7 @@ public class MSSQL implements SQLinterface {
 				s+="\n";
 			}
 		} catch (SQLException e) {
-			System.out.println(e+" 1");
+			e.printStackTrace();
 		}
 		System.out.println(query);
 		return s;
