@@ -191,7 +191,6 @@ public class MSSQL implements SQLinterface {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		System.out.println(query);
 		return s;
 	}
 	private boolean databaseExists(String databaseName) {
