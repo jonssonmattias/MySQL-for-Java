@@ -1,7 +1,7 @@
 package overall;
 
 /**
- * 
+ * Interface for SQL queries
  * 
  * @version 1.0
  * @since 2019-04-13

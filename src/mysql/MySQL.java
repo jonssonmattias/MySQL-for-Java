@@ -221,8 +221,8 @@ public class MySQL implements SQLinterface{
 	 * Converts the number to a string for {@link #select(String, String[], String, String[], int[])} and 
 	 * {@link #join(int, String, String, String[], String[], String, String[], int[])}.
 	 * 
-	 * @param order arrays of numbers to be converted
-	 * @return an array of the converted numbers
+	 * @param order an array of integers for SQL order values to be converted
+	 * @return an string array of the converted integers
 	 */
 	private String[] getOrder(int[] order) {
 		String[] orderType = new String[order.length];
@@ -253,7 +253,6 @@ public class MySQL implements SQLinterface{
 		} catch (SQLException e) {
 			System.out.println(e);
 		}
-		System.out.println(query);
 		return s;
 	}
 
@@ -261,8 +260,8 @@ public class MySQL implements SQLinterface{
 	 * Converts the number to a string for {@link #join(int[], String, String, String[], String[], String)} 
 	 * and {@link #join(int[], String, String, String[], String[], String, String[], int[])}.
 	 * 
-	 * @param type
-	 * @return
+	 * @param type an array of integers for SQL join type values to be converted
+	 * @return an string array of the converted integers
 	 */
 	private String[] getType(int[] type) {
 		String[] joinType = new String[type.length];
