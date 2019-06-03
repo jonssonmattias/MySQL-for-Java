@@ -99,9 +99,9 @@ public class MySQL implements SQLinterface{
 	}
 
 	/* (non-Javadoc)
-	 * @see overall.SQLinterface#insert(java.lang.String, java.lang.String[], java.lang.String[])
+	 * @see overall.SQLinterface#insert(java.lang.String, java.lang.String[], java.lang.Object[])
 	 */
-	public void insert(String tableName, String[] columns, String[] values) {
+	public void insert(String tableName, String[] columns, Object[] values) {
 		try {
 			String query="INSERT INTO `"+tableName+"` (";
 			for(int i=0;i<columns.length-1;i++)query+="`"+columns[i]+"`, ";

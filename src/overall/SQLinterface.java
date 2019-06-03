@@ -45,7 +45,7 @@ public interface SQLinterface {
 	 * @param columns the columns to be inserted on
 	 * @param values the values to insert
 	 */
-	public void insert(String tableName, String[] columns, String[] values);
+	public void insert(String tableName, String[] columns, Object[] values);
 	/**
 	 * Selects all from a given table
 	 * 

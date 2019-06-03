@@ -28,6 +28,36 @@ public class MSSQL implements SQLinterface {
 		connect(connectionString);
 	}
 
+	public static void main(String[] args) {
+		MSSQL mssql = new MSSQL("jdbc:sqlserver://cryptofiletesting.database.windows.net:1433;"
+				   + "database=Testing;user=Mattias@cryptofiletesting;password=CryptoFileHasACoolPassword1;"
+				   + "encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;"
+				   + "loginTimeout=30;");
+		String name = "1');";
+		name = xmlEscapeText(name);
+		mssql.insert("test", new String[]{"name","email","password"}, new String[] {name,"2","3"});
+	}
+	
+	public static String xmlEscapeText(String t) {
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < t.length(); i++){
+			char c = t.charAt(i);
+			switch(c){
+			case '<': sb.append("&lt;"); break;
+			case '>': sb.append("&gt;"); break;
+			case '\"': sb.append("&quot;"); break;
+			case '&': sb.append("&amp;"); break;
+			case '\'': sb.append("&apos;"); break;
+			default:
+				if(c>0x7e) {
+					sb.append("&#"+((int)c)+";");
+				}else
+					sb.append(c);
+			}
+		}
+		return sb.toString();
+	}
+	
 	/**
 	 * Creates a connection string and connects to the database.
 	 * 
@@ -87,13 +117,21 @@ public class MSSQL implements SQLinterface {
 	/* (non-Javadoc)
 	 * @see overall.SQLinterface#insert(java.lang.String, java.lang.String[], java.lang.String[])
 	 */
-	public void insert(String tableName, String[] columns, String[] values) {
+	public void insert(String tableName, String[] columns, Object[] values) {
 		String query="INSERT INTO "+tableName+" (";
-		for(int i=0;i<columns.length-1;i++)query+=columns[i]+", ";
+		for(int i=0;i<columns.length-1;i++)
+			query+=columns[i]+", ";
 		query+=columns[columns.length-1]+") VALUES (";
-
-		for(int i=0;i<values.length-1;i++)query+="'"+values[i]+"', ";
-		query+="'"+values[values.length-1]+"');";
+		for(int i=0;i<values.length-1;i++) {
+			if(values[i] instanceof String)
+				query+="'"+values[i]+"', ";
+			else
+				query+=values[i]+", ";
+		}
+		if(values[values.length-1] instanceof String)
+			query+="'"+values[values.length-1]+"');";
+		else
+			query+=values[values.length-1]+");";
 		runQuery(query);
 	}
 
