@@ -27,36 +27,6 @@ public class MSSQL implements SQLinterface {
 				hostname,port,database, user, password);
 		connect(connectionString);
 	}
-
-	public static void main(String[] args) {
-		MSSQL mssql = new MSSQL("jdbc:sqlserver://cryptofiletesting.database.windows.net:1433;"
-				   + "database=Testing;user=Mattias@cryptofiletesting;password=CryptoFileHasACoolPassword1;"
-				   + "encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;"
-				   + "loginTimeout=30;");
-		String name = "1');";
-		name = xmlEscapeText(name);
-		mssql.insert("test", new String[]{"name","email","password"}, new String[] {name,"2","3"});
-	}
-	
-	public static String xmlEscapeText(String t) {
-		StringBuilder sb = new StringBuilder();
-		for(int i = 0; i < t.length(); i++){
-			char c = t.charAt(i);
-			switch(c){
-			case '<': sb.append("&lt;"); break;
-			case '>': sb.append("&gt;"); break;
-			case '\"': sb.append("&quot;"); break;
-			case '&': sb.append("&amp;"); break;
-			case '\'': sb.append("&apos;"); break;
-			default:
-				if(c>0x7e) {
-					sb.append("&#"+((int)c)+";");
-				}else
-					sb.append(c);
-			}
-		}
-		return sb.toString();
-	}
 	
 	/**
 	 * Creates a connection string and connects to the database.
