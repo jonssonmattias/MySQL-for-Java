@@ -1,2 +1,2 @@
-# MySQL-for-Java
-This is a java class for MySQL
+# SQL-for-Java
+This is a collection of Java-class for SQL queries. 
